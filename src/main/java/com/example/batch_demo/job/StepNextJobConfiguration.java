@@ -17,8 +17,9 @@ public class StepNextJobConfiguration {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
+  private static final String JOB_NAME = "StepNextJob";
 
-  @Bean
+  @Bean(JOB_NAME)
   public Job stepNextJob() {
     return jobBuilderFactory.get("stepNextJob")
         .start(step1())

@@ -17,8 +17,9 @@ import org.springframework.context.annotation.Configuration;
 public class StepNextConditionalJobConfiguration {
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
+  private static final String JOB_NAME = "StepNextConditionalJob";
 
-  @Bean
+  @Bean(JOB_NAME)
   public Job stepNextConditionalJob(){
     return jobBuilderFactory.get("stepNextConditionalJob")
         .start(conditionalJobStep1())

@@ -18,9 +18,10 @@ import org.springframework.context.annotation.Configuration;
 public class SimpleJobConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    @Bean
+    private static final String JOB_NAME = "SimpleJob";
+    @Bean(JOB_NAME)
     public Job simpleJob(){
-        return jobBuilderFactory.get("simpleJob")
+        return jobBuilderFactory.get("SimpleJob")
                 .start(simpleStep1(null))
                 .build();
     }
