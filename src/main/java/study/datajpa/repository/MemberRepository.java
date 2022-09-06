@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -22,4 +23,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
   //이 기능도 문법 오류를 어플리케이션 로딩 시점에 파싱해서 검증한다.
   @Query("select m from Member m where m.username = :username and m.age = :age")
   List<Member> findUser(@Param("username") String username, @Param("age") int age);
+
+  @Query("select m.username from Member m")
+  List<String> findUsername();
+
+  @Query("select new study.datajpa.dto.MemberDto(m.id, m.username, t.name) from Member m join m.team t")
+  //생성자와 매칭이 되어야 한다.(JPQL 문법)
+  List<MemberDto> findMemberDto();
 }

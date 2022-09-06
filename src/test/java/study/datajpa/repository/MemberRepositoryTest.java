@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
 @SpringBootTest
 @Transactional //같은 트랜잭션에서 영속성 컨텍스트가 같은 인스턴스임을 보장한다.
@@ -17,6 +19,7 @@ import study.datajpa.entity.Member;
 class MemberRepositoryTest {
 
   @Autowired MemberRepository memberRepository;
+  @Autowired TeamRepository teamRepository;
 
   @Test
   public void testMember(){
@@ -101,5 +104,37 @@ class MemberRepositoryTest {
     Member findMember = result.get(0);
 
     assertThat(findMember).isEqualTo(member1);
+  }
+
+  @Test
+  public void findUsernameList(){
+    Member member1 = new Member("AAA", 10);
+    Member member2 = new Member("BBB", 20);
+
+    memberRepository.save(member1);
+    memberRepository.save(member2);
+
+    List<String> usernameList = memberRepository.findUsername();
+    for(String s : usernameList){
+      System.out.println("s = " + s);
+    }
+  }
+
+  @Test
+  public void findMemberDtoTest(){
+    Member member1 = new Member("AAA", 10);
+
+    Team team = new Team("teamA");
+
+    member1.setTeam(team);
+
+    teamRepository.save(team);
+    memberRepository.save(member1);
+
+    List<MemberDto> memberDtoList = memberRepository.findMemberDto();
+
+    for(MemberDto dto : memberDtoList){
+      System.out.println("dto = " + dto);
+    }
   }
 }
