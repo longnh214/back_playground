@@ -2,6 +2,7 @@ package study.datajpa.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
@@ -135,6 +136,24 @@ class MemberRepositoryTest {
 
     for(MemberDto dto : memberDtoList){
       System.out.println("dto = " + dto);
+    }
+  }
+
+  @Test
+  public void findByNames(){
+    Member member1 = new Member("AAA", 10);
+
+    Team team = new Team("teamA");
+
+    member1.setTeam(team);
+
+    teamRepository.save(team);
+    memberRepository.save(member1);
+
+    List<Member> result = memberRepository.findByNames(Arrays.asList("AAA", "BBB"));
+
+    for(Member member : result){
+      System.out.println("member = " + member);
     }
   }
 }
