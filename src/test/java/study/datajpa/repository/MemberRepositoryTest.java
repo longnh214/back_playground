@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -155,5 +156,20 @@ class MemberRepositoryTest {
     for(Member member : result){
       System.out.println("member = " + member);
     }
+  }
+  
+  @Test
+  public void returnType(){
+    Member member1 = new Member("AAA", 10);
+    Member member2 = new Member("BBB", 20);
+
+    memberRepository.save(member1);
+    memberRepository.save(member2);
+
+    List<Member> aaa = memberRepository.findListByUsername("AAA");
+    Member member = memberRepository.findMemberByUsername("steadfast"); //단건 일 경우 없으면 null이다.
+    Optional<Member> optionalMember = memberRepository.findOptionalByUsername("steadfast"); //nullable 하면 optional로 처리한다.
+    //Optional 객체에 값 두개인 결과가 나오면 exception이 터진다.
+    assertThat(optionalMember).isEqualTo(null);
   }
 }
