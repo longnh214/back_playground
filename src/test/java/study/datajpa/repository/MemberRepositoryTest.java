@@ -170,6 +170,6 @@ class MemberRepositoryTest {
     Member member = memberRepository.findMemberByUsername("steadfast"); //단건 일 경우 없으면 null이다.
     Optional<Member> optionalMember = memberRepository.findOptionalByUsername("steadfast"); //nullable 하면 optional로 처리한다.
     //Optional 객체에 값 두개인 결과가 나오면 exception이 터진다.
-    assertThat(optionalMember).isEqualTo(null);
+    assertThat(optionalMember).isEqualTo(Optional.empty());
   }
 }
