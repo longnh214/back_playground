@@ -9,6 +9,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -171,5 +174,38 @@ class MemberRepositoryTest {
     Optional<Member> optionalMember = memberRepository.findOptionalByUsername("steadfast"); //nullable 하면 optional로 처리한다.
     //Optional 객체에 값 두개인 결과가 나오면 exception이 터진다.
     assertThat(optionalMember).isEqualTo(Optional.empty());
+  }
+
+  @Test
+  public void paging(){
+    //given
+    memberRepository.save(new Member("member1", 10));
+    memberRepository.save(new Member("member2", 10));
+    memberRepository.save(new Member("member3", 10));
+    memberRepository.save(new Member("member4", 10));
+    memberRepository.save(new Member("member5", 10));
+
+    PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+    int age = 10;
+    int offset = 0;
+    int limit = 3;
+
+    //when
+    Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+    //페이지 계산 공식 적용...
+    //totalPage = totalCount / size ...
+
+    //then
+    List<Member> content = page.getContent();
+    long totalElements = page.getTotalElements();
+
+    assertThat(content.size()).isEqualTo(3);
+    assertThat(page.getTotalElements()).isEqualTo(5L);
+    assertThat(page.getNumber()).isEqualTo(0);
+    assertThat(page.getTotalPages()).isEqualTo(2);
+    assertThat(page.isFirst()).isTrue();
+    assertThat(page.hasNext()).isTrue();
   }
 }
