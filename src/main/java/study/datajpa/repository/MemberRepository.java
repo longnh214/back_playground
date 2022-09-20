@@ -44,5 +44,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
   Optional<Member> findOptionalByUsername(String username); //단건
 
+  //카운트 쿼리 안에 조인을 하게 되면 성능이 나빠질 수 있으므로 Query annotation 안에 countQuery를 따로 설정할 수 있다.
+  //@Query(value = "select m from Member m left join Team t", countQuery = "select count(m) from Member m")
   Page<Member> findByAge(int age, Pageable pageable);
 }
