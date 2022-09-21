@@ -193,7 +193,13 @@ class MemberRepositoryTest {
     int limit = 3;
 
     //when
+    //페이지(Entity)는 그대로 반환하면 안된다. DTO로 변환해서 반환하는 게 좋다. 엔티티는 외부에 노출시키면 안된다.
     Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+    //Entity -> DTO 변환
+    //page.map(member -> new MemberDto(member.getId(), member.getUsername(), null));
+    //Page<MemberDto> toMap = page.map(member -> new MemberDto(member.getId(), member.getUsername(), null));
+    //반환 가능
 
     //페이지 계산 공식 적용...
     //totalPage = totalCount / size ...
