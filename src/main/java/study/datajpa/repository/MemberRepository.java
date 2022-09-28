@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import study.datajpa.dto.MemberDto;
@@ -47,4 +48,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
   //카운트 쿼리 안에 조인을 하게 되면 성능이 나빠질 수 있으므로 Query annotation 안에 countQuery를 따로 설정할 수 있다.
   //@Query(value = "select m from Member m left join Team t", countQuery = "select count(m) from Member m")
   Page<Member> findByAge(int age, Pageable pageable);
+
+  @Modifying //@Modifying이 있어야 executeUpdate를 실행한다. 변경 감지
+  @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
+  int bulkAgePlus(@Param("age") int age);
 }
