@@ -49,7 +49,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
   //@Query(value = "select m from Member m left join Team t", countQuery = "select count(m) from Member m")
   Page<Member> findByAge(int age, Pageable pageable);
 
-  @Modifying //@Modifying이 있어야 executeUpdate를 실행한다. 변경 감지
+  @Modifying(clearAutomatically = true) //@Modifying이 있어야 executeUpdate를 실행한다. 변경 감지
   @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
+  //bulk 성 업데이트의 문제점 : 영속성 컨텍스트에서 엔티티를 관리하는 점을 무시하고 바로 업데이트를 한다.
   int bulkAgePlus(@Param("age") int age);
 }
