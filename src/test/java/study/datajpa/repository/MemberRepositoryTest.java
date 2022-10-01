@@ -19,6 +19,9 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @SpringBootTest
 @Transactional //같은 트랜잭션에서 영속성 컨텍스트가 같은 인스턴스임을 보장한다.
 @Rollback(false)
@@ -26,6 +29,10 @@ class MemberRepositoryTest {
 
   @Autowired MemberRepository memberRepository;
   @Autowired TeamRepository teamRepository;
+  @PersistenceContext
+  EntityManager entityManager;
+
+
 
   @Test
   public void testMember(){
@@ -254,9 +261,18 @@ class MemberRepositoryTest {
     memberRepository.save(new Member("member3", 20));
     memberRepository.save(new Member("member4", 21));
     memberRepository.save(new Member("member5", 40));
+    //영속성 컨텍스트를 거치지 않기 때문에 DB와 영속성 컨텍스트의 싱크가 안 맞을 수 있다.
 
     //when
     int resultCount = memberRepository.bulkAgePlus(20);
+
+    // 대신에 @Modifying에서 clearAutomatically=true 옵션을 줘도 된다.
+    // entityManager.flush(); //영속성 컨텍스트 동기화
+    // entityManager.clear(); //영속성 컨텍스트 초기화
+
+    List<Member> result = memberRepository.findByUsername("member5");
+    Member member5 = result.get(0);
+    System.out.println(member5.getAge());
 
     //then
     assertThat(resultCount).isEqualTo(3);
