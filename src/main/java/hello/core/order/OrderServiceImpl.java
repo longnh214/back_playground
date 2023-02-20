@@ -10,11 +10,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderServiceImpl implements OrderService{
+  //@Autowired private MemberRepository memberRepository; //필드 주입(권장하지 않음)
   private final MemberRepository memberRepository;
-//  private final MemberRepository memberRepository = new MemoryMemberRepository();
+
+//  @Autowired private DiscountPolicy discountPolicy; //Null Pointer Exception 발생
   private final DiscountPolicy discountPolicy; //Null Pointer Exception 발생
+
+//  private final MemberRepository memberRepository = new MemoryMemberRepository();
 //  private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
 //  private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
+
+//  @Autowired //Setter 자동 주입
+//  public void setMemberRepository(MemberRepository memberRepository) {
+//    this.memberRepository = memberRepository;
+//  }
+//
+//  @Autowired //Setter 자동 주입
+//  public void setDiscountPolicy(DiscountPolicy discountPolicy) {
+//    this.discountPolicy = discountPolicy;
+//  }
 
   @Autowired
   public OrderServiceImpl(MemberRepository memberRepository,
