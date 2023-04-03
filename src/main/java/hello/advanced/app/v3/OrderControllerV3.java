@@ -22,7 +22,7 @@ public class OrderControllerV3 {
       trace.end(status);
     }catch(Exception e){
       trace.exception(status, e);
-      throw e; // 예외를 다시 던져주어야 한다. 안 던지면 예외를 먹어보리고, 이후에 정상 흐름으로 동작해버린다.
+      throw e; // 예외를 다시 던져주어야 한다. 안 던지면 예외를 먹어버리고, 이후에 정상 흐름으로 동작해버린다.
     }
 
     return "ok";
