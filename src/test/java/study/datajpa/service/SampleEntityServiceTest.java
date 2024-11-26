@@ -45,7 +45,7 @@ class SampleEntityServiceTest {
 
     @Test
     @DisplayName("낙관적 락 테스트")
-    void optimisticLockTest() throws InterruptedException {
+    void optimisticLockTest(){
         sampleEntityService.updateOptimisticSampleEntity(1L);
     }
 
