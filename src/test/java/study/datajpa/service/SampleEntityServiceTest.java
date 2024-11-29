@@ -87,7 +87,6 @@ class SampleEntityServiceTest {
         executorService.shutdown();
 
         SampleEntity sampleEntity = sampleEntityRepository.findByIdWithOptimisticLock(1L);
-        System.out.println(sampleEntity.getVersion());
 
         assertEquals(90L, sampleEntity.getQuantity());
     }

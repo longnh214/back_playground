@@ -2,10 +2,11 @@ package study.datajpa.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -276,5 +277,37 @@ class MemberRepositoryTest {
 
     //then
     assertThat(resultCount).isEqualTo(3);
+  }
+
+  @Test
+  public void saveMember100Test() throws IOException {
+    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    long start = System.currentTimeMillis();
+    for(int i=0;i<100000;i++){
+      memberRepository.save(new Member("memberName" + i));
+    }
+    long end = System.currentTimeMillis();
+
+    bw.write("total time : " + (end - start) + "\n");
+    bw.flush();
+    bw.close();
+  }
+
+  @Test
+  public void saveAllMember100Test() throws IOException {
+    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    long start = System.currentTimeMillis();
+    List<Member> memberList = new ArrayList<>();
+
+    for(int i=0;i<100000;i++){
+      memberList.add(new Member("memberName" + i));
+    }
+    memberRepository.saveAll(memberList);
+
+    long end = System.currentTimeMillis();
+
+    bw.write("total time : " + (end - start) + "\n");
+    bw.flush();
+    bw.close();
   }
 }
