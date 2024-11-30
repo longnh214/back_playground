@@ -101,7 +101,7 @@ class SampleEntityServiceTest {
     @DisplayName("비관적 락 동시성 테스트")
     void pessimisticLockTest10() throws InterruptedException{
         final int threadCount = 10;
-        final ExecutorService executorService = Executors.newFixedThreadPool(1);
+        final ExecutorService executorService = Executors.newFixedThreadPool(8);
         final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
         for(int i=0;i<threadCount;i++){
