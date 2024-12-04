@@ -1,5 +1,7 @@
 package com.spring.spring_security.config;
 
+import com.spring.spring_security.service.OAuthUserDetailService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final OAuthUserDetailService oAuthUserDetailService;
+
+    @PostConstruct
+    public void init() {
+        // OAuthUserDetailService가 빈으로 등록되었는지 확인
+        if (oAuthUserDetailService != null) {
+            System.out.println("OAuthUserDetailService bean has been successfully initialized.");
+        } else {
+            System.err.println("OAuthUserDetailService bean is missing!");
+        }
+    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
@@ -29,7 +42,7 @@ public class SecurityConfig {
                                 authorizeRequests
                                         // Swagger 관련 경로를 허용
                                         .requestMatchers("/user/add").permitAll()
-                                        .requestMatchers("/login").permitAll()
+                                        .requestMatchers("/login/**", "/oauth2/**").permitAll()
                                         .requestMatchers(
                                                 "/swagger/**",       // Swagger UI 정적 리소스
                                                 "/v3/api-docs/**",   // OpenAPI 문서
@@ -47,6 +60,11 @@ public class SecurityConfig {
 //                                .passwordParameter("password")
                                 .defaultSuccessUrl("/hello", true)
                                 .permitAll()
+                )
+                .oauth2Login(formLogin -> formLogin
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuthUserDetailService))
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/hello", true)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
