@@ -1,7 +1,6 @@
 package com.spring.spring_security.config;
 
 import com.spring.spring_security.service.OAuthUserDetailService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,21 +21,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final OAuthUserDetailService oAuthUserDetailService;
-
-    @PostConstruct
-    public void init() {
-        // OAuthUserDetailService가 빈으로 등록되었는지 확인
-        if (oAuthUserDetailService != null) {
-            System.out.println("OAuthUserDetailService bean has been successfully initialized.");
-        } else {
-            System.err.println("OAuthUserDetailService bean is missing!");
-        }
-    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-
         return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         (authorizeRequests) ->
                                 authorizeRequests
@@ -55,9 +43,9 @@ public class SecurityConfig {
                 .formLogin(
                         (formLogin) -> formLogin
                                 .loginPage("/login")
-//                                .loginProcessingUrl("/login")
-//                                .usernameParameter("username")
-//                                .passwordParameter("password")
+                                .loginProcessingUrl("/login")
+                                .usernameParameter("username")
+                                .passwordParameter("password")
                                 .defaultSuccessUrl("/hello", true)
                                 .permitAll()
                 )
