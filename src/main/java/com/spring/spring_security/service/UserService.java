@@ -24,10 +24,11 @@ public class UserService {
     }
 
     public void addUser(UserDto userDto){
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRole(userDto.getRole());
+        User user = User.builder()
+                .username(userDto.getUsername())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .role(userDto.getRole())
+                .build();
 
         userRepository.saveAndFlush(user);
     }
