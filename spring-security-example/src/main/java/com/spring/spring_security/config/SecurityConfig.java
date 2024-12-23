@@ -9,11 +9,14 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,41 +26,57 @@ public class SecurityConfig {
     private final OAuthUserDetailService oAuthUserDetailService;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        //Session 방식 및 OAuth 방식 return
+//        return httpSecurity
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(
+//                        (authorizeRequests) ->
+//                                authorizeRequests
+//                                        // Swagger 관련 경로를 허용
+//                                        .requestMatchers("/user/add").permitAll()
+//                                        .requestMatchers("/login/**", "/oauth2/**").permitAll()
+//                                        .requestMatchers(
+//                                                "/swagger/**",       // Swagger UI 정적 리소스
+//                                                "/v3/api-docs/**",   // OpenAPI 문서
+//                                                "/swagger-ui/**"     // Swagger UI 경로
+//                                        )
+//                                        .permitAll()
+//                                        .anyRequest()
+//                                        .authenticated()
+//                )
+//                .formLogin(
+//                        (formLogin) -> formLogin
+//                                .loginPage("/login")
+//                                .loginProcessingUrl("/login")
+//                                .usernameParameter("username")
+//                                .passwordParameter("password")
+//                                .defaultSuccessUrl("/hello", true)
+//                                .permitAll()
+//                )
+//                .oauth2Login(formLogin -> formLogin
+//                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuthUserDetailService))
+//                        .loginPage("/login")
+//                        .defaultSuccessUrl("/hello", true)
+//                )
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .logoutSuccessUrl("/login?logout")
+//                        .permitAll()
+//                )
+//                .build();
+        //JWT 방식 return
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        (authorizeRequests) ->
-                                authorizeRequests
-                                        // Swagger 관련 경로를 허용
-                                        .requestMatchers("/user/add").permitAll()
-                                        .requestMatchers("/login/**", "/oauth2/**").permitAll()
-                                        .requestMatchers(
-                                                "/swagger/**",       // Swagger UI 정적 리소스
-                                                "/v3/api-docs/**",   // OpenAPI 문서
-                                                "/swagger-ui/**"     // Swagger UI 경로
-                                        )
-                                        .permitAll()
-                                        .anyRequest()
-                                        .authenticated()
+//                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
+//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
+                        .configurationSource(corsConfigurationSource()))
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 생성 정책 설정
                 )
-                .formLogin(
-                        (formLogin) -> formLogin
-                                .loginPage("/login")
-                                .loginProcessingUrl("/login")
-                                .usernameParameter("username")
-                                .passwordParameter("password")
-                                .defaultSuccessUrl("/hello", true)
-                                .permitAll()
-                )
-                .oauth2Login(formLogin -> formLogin
-                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuthUserDetailService))
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/hello", true)
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login/**").permitAll() // 인증 없이 접근 허용
+                        .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .build();
     }
@@ -65,7 +84,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
+        configuration.setAllowCredentials(true);
+        configuration.addAllowedOrigin("http://localhost:5173");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
