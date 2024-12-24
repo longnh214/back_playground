@@ -37,16 +37,10 @@ public class LoginController {
         return jwtTokenUtil.generateToken(userDetails);
     }
 
-    @GetMapping("/login/test")
-    public String hello(){
-        return "hello";
-    }
-
     @GetMapping("/login/oauth2/code/kakao")
     @ResponseBody
     public String kakaoLogin(@AuthenticationPrincipal UserDetail userDetail){
-        log.info("token : {}", userDetail.getAttributes());
-//        log.info("token : {}", oAuth.getName());
+        log.info("attributes : {}", userDetail.getAttributes());
 
         return "kakao login success";
     }

@@ -1,5 +1,6 @@
 package com.spring.spring_security.config;
 
+import com.spring.spring_security.filter.JwtAuthenticationFilter;
 import com.spring.spring_security.service.OAuthUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -22,8 +24,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
-    private final OAuthUserDetailService oAuthUserDetailService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //Session 방식 및 OAuth 방식 return
@@ -64,11 +65,10 @@ public class SecurityConfig {
 //                        .permitAll()
 //                )
 //                .build();
+
         //JWT 방식 return
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-//                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
                         .configurationSource(corsConfigurationSource()))
                 .sessionManagement(sessionManagement -> sessionManagement
@@ -78,6 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/login/**").permitAll() // 인증 없이 접근 허용
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
