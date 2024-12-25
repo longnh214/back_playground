@@ -25,6 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuthUserDetailService oAuthUserDetailService;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         //Session 방식 및 OAuth 방식 return
@@ -76,13 +77,19 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login/**").permitAll() // 인증 없이 접근 허용
+                        .requestMatchers(
+                                "/swagger/**",       // Swagger UI 정적 리소스
+                                "/v3/api-docs/**",   // OpenAPI 문서
+                                "/swagger-ui/**"     // Swagger UI 경로
+                        )
+                        .permitAll()
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    @Bean
+//    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
