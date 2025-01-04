@@ -30,8 +30,8 @@ public class OAuthUserDetailService extends DefaultOAuth2UserService {
         log.debug("getAccessToken = " + userRequest.getAccessToken().getTokenValue());
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        // 구글로그인 버튼 클릭 -> 구글로그인창 -> 로그인을 완료 -> code를 리턴(OAuth2-Client 라이브러리) -> AccessToken 요청
-        // userRequest 정보 -> 회원 프로필 받아야함(loadUser함수 호출) -> 구글로부터 회원프로필 받아준다.
+        // 카카오 로그인 버튼 클릭 -> 카카오 로그인창 -> 로그인을 완료 -> code를 리턴(OAuth2-Client 라이브러리) -> AccessToken 요청
+        // userRequest 정보 -> 회원 프로필 받아야함(loadUser함수 호출) -> 카카오로부터 회원프로필 받아준다.
         log.debug("getAttributes = " + oAuth2User.getAttributes());
 
         OAuth2UserInfo oAuth2UserInfo = null;
@@ -42,17 +42,17 @@ public class OAuthUserDetailService extends DefaultOAuth2UserService {
             log.debug("We only supported kakao.");
         }
 
-        String provider = oAuth2UserInfo.getProvider(); // google
+        String provider = oAuth2UserInfo.getProvider(); // kakao
         String providerId = oAuth2UserInfo.getProviderId();
-        String username = provider + "_" + providerId; // google_10021320120
-        String password = passwordEncoder.encode("겟인데어");
+        String username = provider + "_" + providerId; // kakao_10021320120
+        String password = passwordEncoder.encode("kakaoProviderPassword");
         String role = "ROLE_USER";
 
         Optional<User> userEntityOptional = userRepository.findByUsername(username);
         User userEntity;
 
         if (userEntityOptional.isEmpty()) {
-            log.debug("Your first Google Login.");
+            log.debug("Your first Kakao Login.");
             userEntity = User.builder()
                     .username(username)
                     .password(password)
