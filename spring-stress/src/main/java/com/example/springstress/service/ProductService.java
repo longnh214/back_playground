@@ -4,6 +4,8 @@ import com.example.springstress.dto.ProductDto;
 import com.example.springstress.entity.Product;
 import com.example.springstress.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,7 @@ public class ProductService {
         return convertToDto(product);
     }
 
+    @Cacheable("productCache")
     public List<ProductDto> searchProducts(String category, String name, Pageable pageable) {
         List<Product> products;
 
