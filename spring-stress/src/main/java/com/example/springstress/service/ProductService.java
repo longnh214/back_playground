@@ -4,9 +4,11 @@ import com.example.springstress.dto.ProductDto;
 import com.example.springstress.entity.Product;
 import com.example.springstress.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,10 +30,13 @@ public class ProductService {
         return convertToDto(product);
     }
 
-    public List<ProductDto> searchProducts(String category, String name) {
+    public List<ProductDto> searchProducts(String category, String name, Pageable pageable) {
         List<Product> products;
 
-        if (category != null && name != null) {
+        if(!Objects.isNull(pageable)){
+            products = productRepository.findByCategoryAndNameContainingIgnoreCase(category, name, pageable).toList();
+//            products = productRepository.searchProductsByCategoryAndName(category, name, pageable).toList();
+        }else if (category != null && name != null) {
             products = productRepository.findByCategoryAndNameContainingIgnoreCase(category, name);
         } else if (category != null) {
             products = productRepository.findByCategory(category);
