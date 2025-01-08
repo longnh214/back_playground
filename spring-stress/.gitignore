@@ -39,3 +39,6 @@ out/
 ### Setting File ###
 .properties
 application.yml
+
+### nGrinder Controller
+/ngrinder-controller
