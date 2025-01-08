@@ -1,5 +1,6 @@
 package com.example.springstress.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,5 +39,4 @@ public class Product {
     @Column(nullable = false)
     @Version // Optimistic locking for concurrent updates
     private Integer version;
-
 }

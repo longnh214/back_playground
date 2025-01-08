@@ -1,17 +1,16 @@
 package com.example.springstress.service;
 
+
 import com.example.springstress.dto.ProductDto;
 import com.example.springstress.entity.Product;
 import com.example.springstress.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Cache;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +26,13 @@ public class ProductService {
     }
 
     public ProductDto getProductById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
+        Product product =
+                productRepository
+                        .findById(id)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                "Product not found with id: " + id));
         return convertToDto(product);
     }
 
@@ -36,10 +40,14 @@ public class ProductService {
     public List<ProductDto> searchProducts(String category, String name, Pageable pageable) {
         List<Product> products;
 
-        if(!Objects.isNull(pageable)){
-            products = productRepository.findByCategoryAndNameContainingIgnoreCase(category, name, pageable).toList();
-//            products = productRepository.searchProductsByCategoryAndName(category, name, pageable).toList();
-        }else if (category != null && name != null) {
+        if (!Objects.isNull(pageable)) {
+            products =
+                    productRepository
+                            .findByCategoryAndNameContainingIgnoreCase(category, name, pageable)
+                            .toList();
+            //            products = productRepository.searchProductsByCategoryAndName(category,
+            // name, pageable).toList();
+        } else if (category != null && name != null) {
             products = productRepository.findByCategoryAndNameContainingIgnoreCase(category, name);
         } else if (category != null) {
             products = productRepository.findByCategory(category);
@@ -58,7 +66,6 @@ public class ProductService {
                 product.getName(),
                 product.getCategory(),
                 product.getPrice(),
-                product.getDescription()
-        );
+                product.getDescription());
     }
 }
