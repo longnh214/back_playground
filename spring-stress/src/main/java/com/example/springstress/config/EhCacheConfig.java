@@ -12,11 +12,10 @@ import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@EnableCaching
 @Configuration
 public class EhCacheConfig {
 
-    @Bean
+    @Bean("ehCacheCacheManager")
     public org.springframework.cache.CacheManager cacheManager() {
         CachingProvider cachingProvider = Caching.getCachingProvider();
         CacheManager jCacheManager = cachingProvider.getCacheManager();
@@ -26,7 +25,7 @@ public class EhCacheConfig {
                         .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_MINUTE))
                         .setStoreByValue(false)
                         .setStatisticsEnabled(true);
-        jCacheManager.createCache("productCache", configuration);
+        jCacheManager.createCache("ehCache", configuration);
 
         return new JCacheCacheManager(jCacheManager);
     }

@@ -36,7 +36,8 @@ public class ProductService {
         return convertToDto(product);
     }
 
-    @Cacheable("productCache")
+    @Cacheable(cacheNames = "ehCache", cacheManager = "ehCacheCacheManager")
+//    @Cacheable(cacheNames = "redisCache", cacheManager = "redisCacheManager")
     public List<ProductDto> searchProducts(String category, String name, Pageable pageable) {
         List<Product> products;
 
