@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.diffplug.spotless' version '6.11.0'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'com.mysql:mysql-connector-j:9.1.0'
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.4.1'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.ehcache:ehcache::jakarta'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.4.1'
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+spotless {
+    java {
+        target("**/*.java")
+        googleJavaFormat().aosp()  // 구글 자바 포맷 적용
+        // indentWithTabs(2)
+        // indentWithSpaces(4)
+        importOrder()  // import 순서 정의
+        removeUnusedImports()   // 사용하지 않는 import 제거
+        trimTrailingWhitespace()   // 공백 제거
+        endWithNewline()  // 끝부분 New Line 처리
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
