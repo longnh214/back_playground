@@ -32,6 +32,10 @@ public class ScheduleTask {
   Job stepNextJob;
 
   @Autowired
+  @Qualifier("DBJob")
+  Job dbJob;
+
+  @Autowired
   @Qualifier("StepNextConditionalJob")
   Job stepNextConditionalJob;
 
@@ -71,6 +75,19 @@ public class ScheduleTask {
 
       parameters.put("requestDate", param);
       jobLauncher.run(stepNextConditionalJob, new JobParameters(parameters));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Scheduled(fixedRate = -1L)
+  public void runDBJob() {
+    try {
+      JobParameter param = new JobParameter(System.currentTimeMillis());
+      Map<String,JobParameter> parameters = new HashMap<String,JobParameter>();
+
+      parameters.put("requestDate", param);
+      jobLauncher.run(dbJob, new JobParameters(parameters));
     } catch (Exception e) {
       e.printStackTrace();
     }
