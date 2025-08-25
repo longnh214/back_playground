@@ -36,8 +36,8 @@ public class EhCacheConfig {
         return new JCacheCacheManager(jCacheManager);
     }
 
-    @Bean("noticeCacheManager")
-    public org.springframework.cache.CacheManager noticeCacheManager() {
+    @Bean("noticeEhCacheManager")
+    public org.springframework.cache.CacheManager noticeEhCacheManager() {
         CachingProvider cachingProvider = Caching.getCachingProvider(EhcacheCachingProvider.class.getName());
         javax.cache.CacheManager jcacheManager = cachingProvider.getCacheManager();
 
@@ -48,7 +48,7 @@ public class EhCacheConfig {
                                         Object.class,
                                         Object.class,
                                         ResourcePoolsBuilder.heap(1000))
-                                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(java.time.Duration.of(10, ChronoUnit.SECONDS)))
+                                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(java.time.Duration.of(10, ChronoUnit.MINUTES)))
                                 .build()
                 );
 
@@ -63,7 +63,7 @@ public class EhCacheConfig {
                                         Object.class,
                                         Object.class,
                                         ResourcePoolsBuilder.heap(10000))
-                                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(java.time.Duration.of(10, ChronoUnit.SECONDS)))
+                                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(java.time.Duration.of(10, ChronoUnit.MINUTES)))
                                 .build()
                 );
 
@@ -76,7 +76,7 @@ public class EhCacheConfig {
                                         Object.class,
                                         Object.class,
                                         ResourcePoolsBuilder.heap(10000))
-                                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(java.time.Duration.of(10, ChronoUnit.SECONDS)))
+                                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(java.time.Duration.of(10, ChronoUnit.MINUTES)))
                                 .build()
                 );
 
