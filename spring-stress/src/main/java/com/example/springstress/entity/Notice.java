@@ -26,9 +26,9 @@ public class Notice {
     @Column(length = 30)
     private String who;
 
-    @Column(name = "createDate", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "createDate", nullable = false, columnDefinition = "timestamp DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createDate;
 
-    @Column(name = "updateDate", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "updateDate", nullable = false, columnDefinition = "timestamp DEFAULT CURRENT_TIMESTAMP")
     private Timestamp updateDate;
 }
