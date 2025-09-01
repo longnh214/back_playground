@@ -23,7 +23,7 @@ public class NoticeService {
         return noticeRepository.findAll();
     }
 
-    @Cacheable(value = "NoticeReadMapper.findByPage", key = "#request.requestURI + '-' + #pageNumber", condition = "#pageNumber <= 5")
+    @Cacheable(value = "NoticeReadMapper.findByPage", key = "#request.requestURI + '-' + #pageNumber", condition = "#pageNumber <= 5", cacheManager = "noticeEhCacheManager")
     public List<Notice> findByPage(HttpServletRequest request, int pageNumber) {
         int startIdx = (pageNumber - 1) * 10;
         int offset = 10;
